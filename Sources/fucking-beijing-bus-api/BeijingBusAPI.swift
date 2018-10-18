@@ -1,5 +1,6 @@
 
 import Alamofire
+import Mappable
 
 struct BeijingBusAPI {
     
@@ -8,7 +9,7 @@ struct BeijingBusAPI {
                     completion: @escaping (DataResponse<Any>)->Void)
     {
         let baseURL = "http://transapp.btic.org.cn:8512/"
-        let url = baseURL + path + "?city=北京&datatype=json"
+        let url = baseURL + path + "?city=%E5%8C%97%E4%BA%AC&datatype=json"
         let request = Alamofire.request(url,
                                         method: .post,
                                         parameters: parameters,
@@ -28,14 +29,30 @@ struct BeijingBusAPI {
 
     
     /// Get the status of specific stations with bus lines
-    public func getStationStatus(_ stationWithLines: [(lineID:IDType, stationName:String, indexInBusLine:Int)], completion: @escaping () -> Void)
+    public func getStationStatus(_ stationWithLines: [(lineID:IDType, stationName:String, indexInBusLine:Int)], completion: @escaping ( Result<[BusInfoAtStation]>) -> Void)
     {
         let items = stationWithLines.map {
             String(format:"%d@@@%d@@@%@", $0.lineID, $0.indexInBusLine, $0.stationName)
         } .joined(separator: "|||")
         
         requestAPI(path: "ssgj/bus2.php", parameters:  ["query": items]) { (response) in
-            completion()
+            switch response.result {
+            case .success(let dict):
+                guard let root = (dict as? [String: Any])?["root"],
+                    let data = (root as? [String: Any])?["data"],
+                    let bus = (data as? [String:Any])?["bus"] as? [[String: Any]]
+                    else {
+                        completion(.success([]))
+                        return
+                }
+                
+                let infos = bus.compactMap {
+                    try? BusInfoAtStation(JSONObject: $0)
+                }
+                completion(.success(infos))
+            case .failure(let e):
+                completion(.failure(e))
+            }
         }
     }
     

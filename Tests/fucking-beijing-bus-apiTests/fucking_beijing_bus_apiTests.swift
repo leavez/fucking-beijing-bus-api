@@ -34,8 +34,8 @@ final class fucking_beijing_bus_apiTests: XCTestCase {
                     (lineID: 404, stationName: "学知园", indexInBusLine: 24),  // 478
                     (lineID: 404, stationName: "北京航空航天大学", indexInBusLine: 28), // 478
                     (lineID: 1827, stationName: "学知桥北", indexInBusLine: 37)
-                ], completion: {
-                    
+                ], completion: { infos in
+                    print(infos)
                     done()
             })
         }

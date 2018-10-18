@@ -17,13 +17,13 @@ class Decryption {
         rc4 = RC4(key: key)
     }
     
-    func decode(string: String) -> String? {
+    func decode(string: String) -> String {
         guard let data = Data(base64Encoded: string) else {
-            return nil
+            return string
         }
         let inputBytes: [UInt8] = Array(data)
         let bytes = rc4.encrypt(content: inputBytes)
-        return String(bytes: bytes, encoding: .utf8)
+        return String(bytes: bytes, encoding: .utf8) ?? string
     }
 }
 
