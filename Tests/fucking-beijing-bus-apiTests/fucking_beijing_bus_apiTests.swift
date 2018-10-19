@@ -26,17 +26,27 @@ final class fucking_beijing_bus_apiTests: XCTestCase {
         
     }
     
-    func test_lineStatusAPI() {
+    func test_getLineInfoForStation() {
         itWait { (done) in
-            BeijingBusAPI().getStationStatus(
+            BeijingBusAPI().getLineInfoForStation(
                 [
-                    (lineID: 160, stationName: "东内小街", indexInBusLine: 21),
-                    (lineID: 404, stationName: "学知园", indexInBusLine: 24),  // 478
-                    (lineID: 404, stationName: "北京航空航天大学", indexInBusLine: 28), // 478
-                    (lineID: 1827, stationName: "学知桥北", indexInBusLine: 37)
+                    (lineID: "160", stationName: "东内小街", indexInBusLine: 21),
+                    (lineID: "404", stationName: "学知园", indexInBusLine: 24),  // 478
+                    (lineID: "404", stationName: "北京航空航天大学", indexInBusLine: 28), // 478
+                    (lineID: "1827", stationName: "学知桥北", indexInBusLine: 37)
                 ], completion: { infos in
                     print(infos)
                     done()
+            })
+        }
+    }
+    
+    func test_getAllBusInfo() {
+        itWait { (done) in
+            // 478 线路相对于"北京航空航天大学"
+            BeijingBusAPI().getAllBusInfo(ofLine: "404", referenceStation: 28, completion: { (infos) in
+                print(infos)
+                done()
             })
         }
     }

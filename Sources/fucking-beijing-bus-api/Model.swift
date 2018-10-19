@@ -13,16 +13,16 @@ import Mappable
 public struct BusInfoAtStation: Mappable {
     
     public let ID: String
-    public let displayNumber: Int
+    public let displayNumber: Int?
+    public let timestamp: Double
     
     public let currentLocation: (longitude: Double, latitude: Double) // converted from currentLocationString
-    public let gpsUpdatedTime: TimeInterval
-    public let currentLocationString: (longitude: String, latitude: String)
+    public let gpsUpdatedTime: Double
     
     public let currentStation: (
         distanceRemain:Int,
         estimatedRunDuration: TimeInterval,
-        estimatedArrivedTime: TimeInterval
+        estimatedArrivedTime: Double
     )
     
     public let nextStation: (
@@ -30,7 +30,7 @@ public struct BusInfoAtStation: Mappable {
         index:Int,
         distanceRemain:Int,                 // 距离下一站的距离
         estimatedRunDuration: TimeInterval, // 距离下一站还有几秒
-        estimatedArrivedTime: TimeInterval  // 预计到达下一站的时间
+        estimatedArrivedTime: Double  // 预计到达下一站的时间
     )
     
     public let delay: String                       // 红绿灯延误时间
@@ -38,11 +38,12 @@ public struct BusInfoAtStation: Mappable {
     public let rawJSON: [String: Any]
     
     public init(map: Mapper) throws {
-        displayNumber = try map.lid()
+        displayNumber = try? map.lid()
         ID = try map.id()
+        timestamp = try map.ut()
         
         let de = Decryption(gt: try map.gt())
-        currentLocationString = (
+        let currentLocationString = (
             longitude: de.decode(string: try map.x()) ,
             latitude: de.decode(string: try map.y())
         )
