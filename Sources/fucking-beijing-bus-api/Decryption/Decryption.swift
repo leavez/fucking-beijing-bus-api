@@ -12,8 +12,8 @@ class Decryption {
     
     let rc4: RC4
     
-    init(gt:String) {
-        let key = ("aibang" + gt).md5
+    init(key:String) {
+        let key = ("aibang" + key).md5
         rc4 = RC4(key: key)
     }
     

@@ -15,20 +15,10 @@ func itWait(description: String = "",
 
 final class fucking_beijing_bus_apiTests: XCTestCase {
     
-    func test_base_API_request() {
-
-        itWait { done in
-            BeijingBusAPI().requestAPI(path: "ssgj/bus2.php", completion: { response in
-                XCTAssertNotNil(response.data ?? response.error)
-                done()
-            })
-        }
-        
-    }
     
     func test_getAllLines() {
         itWait { (done) in
-            BeijingBusAPI().getAllLines(completion: { (infos) in
+            BeijingBusAPI.Static.getAllLines(completion: { (infos) in
                 print(infos)
                 done()
             })
@@ -37,7 +27,7 @@ final class fucking_beijing_bus_apiTests: XCTestCase {
     
     func test_getLineInfoForStation() {
         itWait { (done) in
-            BeijingBusAPI().getLineStatusForStation(
+            BeijingBusAPI.RealTime.getLineStatusForStation(
                 [
                     (lineID: "160", stationName: "东内小街", indexInBusLine: 21),
                     (lineID: "404", stationName: "学知园", indexInBusLine: 24),  // 478
@@ -53,11 +43,19 @@ final class fucking_beijing_bus_apiTests: XCTestCase {
     func test_getAllBusInfo() {
         itWait { (done) in
             // 478 线路相对于"北京航空航天大学"
-            BeijingBusAPI().getAllBusesStatus(ofLine: "404", referenceStation: 28, completion: { (infos) in
+            BeijingBusAPI.RealTime.getAllBusesStatus(ofLine: "404", referenceStation: 28, completion: { (infos) in
                 print(infos)
                 done()
             })
         }
     }
 
+    func test_getLineDetail() {
+        itWait { (done) in
+            BeijingBusAPI.Static.getLineDetail(ofLine: "404", completion: { (result) in
+                print(result)
+                done()
+            })
+        }
+    }
 }
