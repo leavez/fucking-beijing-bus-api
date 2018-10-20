@@ -3,7 +3,7 @@ import Foundation
 import Alamofire
 import Mappable
 
-struct BeijingBusAPI {
+public struct BeijingBusAPI {
     
     func requestAPI(path: String,
                     method: HTTPMethod = .get,
