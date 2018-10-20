@@ -16,7 +16,7 @@ public struct BusStatusForStation {
     public let busNumber: String? // 大部分为数字。对于运通路线，前面包含"运通"二字
     public let timestamp: Double
     
-    public let currentLocation: (longitude: Double, latitude: Double) // converted from currentLocationString
+    public let currentLocation: Coordinate
     public let gpsUpdatedTime: Double
     
     public let currentStation: (
@@ -48,8 +48,6 @@ public struct LineMeta {
     let classify: String // 线路分类，比较粗糙，没有什么实际意义
     let status: String // unknow
     let version: String // unknow
-    
-    public let rawJSON: [String: Any]
 }
 
 
@@ -58,7 +56,7 @@ public struct LineDetail {
     public struct Station {
         let name: String
         let index: Int
-        let location: (longitude:Double, latitude:Double)
+        let location: Coordinate
     }
     
     let ID: String
@@ -71,9 +69,22 @@ public struct LineDetail {
     let coords:String // 一些列坐标，这里面的坐标和 stations 里的坐标略有不同，不知道为什么
 }
 
+public struct Coordinate {
+    let longitude: Double
+    let latitude: Double
+}
 
 
 
+// MARK:- Codable
+
+extension LineMeta: Codable, Equatable {}
+extension LineDetail: Codable, Equatable {}
+extension LineDetail.Station: Codable, Equatable {}
+extension Coordinate: Codable, Equatable {}
+
+
+// MARK:- Mappable
 
 
 extension BusStatusForStation: Mappable {
@@ -129,7 +140,7 @@ extension BusStatusForStation: Mappable {
             longitude: de.decode(string: try map.x()) ,
             latitude: de.decode(string: try map.y())
         )
-        currentLocation = (
+        currentLocation = Coordinate(
             longitude: Double(currentLocationString.longitude) ?? -1,
             latitude: Double(currentLocationString.latitude) ?? -1
         )
@@ -170,7 +181,6 @@ extension LineMeta: Mappable {
         classify = try map.classify()
         version = try map.version()
         status = try map.status()
-        rawJSON = map.getRootValue() as? [String: Any] ?? [:]
     }
 }
 
@@ -191,7 +201,7 @@ extension LineDetail: Mappable {
             let index = Int(de.decode(string:  dict["no"] ?? "")) ?? -1
             let lon = Double(de.decode(string:  dict["lon"] ?? "") ) ?? -1
             let lat = Double(de.decode(string:  dict["lat"] ?? "") ) ?? -1
-            return Station(name: name, index: index, location: (lon, lat))
+            return Station(name: name, index: index, location: Coordinate(longitude: lon, latitude: lat))
         }
         
         coords = de.decode(string: try map.coord())
@@ -211,5 +221,10 @@ private func paresefullName(_ name:String) -> (lineNumber:String, departureStati
         return (name, "", "")
     }
 }
+
+
+
+
+
 
 
