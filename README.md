@@ -1,6 +1,8 @@
 # fucking-beijing-bus-api
 
 [![Swift](https://img.shields.io/badge/swift-4.2-orange.svg?style=flat)](#) [![Swift Package Manager](https://rawgit.com/jlyonsmith/artwork/master/SwiftPackageManager/swiftpackagemanager-compatible.svg)](https://swift.org/package-manager/)
+[![Build Status](https://travis-ci.org/leavez/fucking-beijing-bus-api.svg?branch=master)](https://travis-ci.org/leavez/fucking-beijing-bus-api)
+
 
 北京实时公交 API。可以获得车站公交的到站情况，以及公交车的实时定位。
 
