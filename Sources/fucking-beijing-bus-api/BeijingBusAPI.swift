@@ -1,28 +1,34 @@
 
+import Foundation
 import Alamofire
 import Mappable
 
 struct BeijingBusAPI {
     
     func requestAPI(path: String,
-                    parameters: [String: Any]? = [:],
+                    parameters: [String: Any]? = nil,
+                    additionalHeaders: [String: String]? = nil,
                     completion: @escaping (DataResponse<Any>)->Void)
     {
+        // compose the url
         let baseURL = "http://transapp.btic.org.cn:8512/"
         var url = baseURL + path
-        let additionalQuery = "city=%E5%8C%97%E4%BA%AC&datatype=json"
+        let beijing = "北京".addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)!
+        let additionalQuery = "city=\(beijing)&datatype=json"
         if url.contains("?") {
-            url += ("?" + additionalQuery)
-        } else {
             url += ("&" + additionalQuery)
+        } else {
+            url += ("?" + additionalQuery)
         }
+        
+        // request
         let request = Alamofire.request(url,
                                         method: .post,
                                         parameters: parameters,
                                         encoding: URLEncoding(),
-                                        headers: nil)
+                                        headers:additionalHeaders)
         request.responseJSON { (dataResponse) in
-            // print(dataResponse)
+             print(dataResponse)
             completion(dataResponse)
         }
     }
@@ -31,9 +37,34 @@ struct BeijingBusAPI {
     
     
     
-    
-    public func getAll() {
+    /// 该接口把所有公交路线都返回回来，大概 2000 多条（同一条线路的两个方向视为两条），接口数据大概 40+k
+    public func getAllLines(completion: @escaping ((Result<[BusMeta]>) -> Void)) {
         
+        // https://github.com/wong2/beijing_bus/issues/8
+        let headers = [
+            "TIME": "1539706356",
+            "ABTOKEN": "31d7dae1d869a172f3b66fa14fe274d1",
+            "CID":"18d31a75a568b1e9fab8e410d398f981",
+            "PLATFORM": "ios",
+            "PID": "5",
+            "VID": "\(arc4random_uniform(10)+1)",
+            "IMEI": "\(arc4random_uniform(10000)+1)",
+            "CTYPE": "json"
+        ]
+        
+        requestAPI(path: "ssgj/v1.0.0/checkUpdate?version=1", additionalHeaders:headers) { (response) in
+            let parsed = response.result.map({ dict -> [BusMeta] in
+                guard let root = (dict as? [String: Any])?["lines"],
+                    let data = (root as? [String:Any])?["line"] as? [[String: Any]]
+                    else {
+                        return []
+                }
+                return data.compactMap {
+                    try? BusMeta(JSONObject: $0)
+                }
+            })
+            completion(parsed)
+        }
     }
     
 
@@ -43,38 +74,34 @@ struct BeijingBusAPI {
     /// 使用 lineID 表示公交线路，（stationName, indexInBusLine） 表示一个公交站，其中 indexInBusLine
     /// 表示该站在线路中是第几个站（始发站为 1）。
     ///
-    public func getLineInfoForStation(_ stationWithLines: [(lineID:String, stationName:String, indexInBusLine:Int)], completion: @escaping ( Result<[BusInfoAtStation]>) -> Void)
+    public func getLineStatusForStation(_ stationWithLines: [(lineID:String, stationName:String, indexInBusLine:Int)], completion: @escaping ( Result<[BusStatusForStation]>) -> Void)
     {
         let items = stationWithLines.map {
-            String(format:"%d@@@%d@@@%@", $0.lineID, $0.indexInBusLine, $0.stationName)
+            String(format:"%@@@@%d@@@%@", $0.lineID, $0.indexInBusLine, $0.stationName)
         } .joined(separator: "|||")
         
         requestAPI(path: "ssgj/bus2.php", parameters:  ["query": items]) { (response) in
-            switch response.result {
-            case .success(let dict):
+            let parsed = response.result.map({ dict -> [BusStatusForStation] in
                 guard let root = (dict as? [String: Any])?["root"],
                     let data = (root as? [String: Any])?["data"],
                     let bus = (data as? [String:Any])?["bus"] as? [[String: Any]]
                     else {
-                        completion(.success([]))
-                        return
+                        return []
                 }
-                
-                let infos = bus.compactMap {
-                    try? BusInfoAtStation(JSONObject: $0)
+                return bus.compactMap {
+                    try? BusStatusForStation(JSONObject: $0)
                 }
-                completion(.success(infos))
-            case .failure(let e):
-                completion(.failure(e))
-            }
+            })
+            completion(parsed)
         }
     }
     
     /// 获取公交线路的所有车的状态
     ///
     /// 返回结果为数组，数组中所有信息都是相对输入参数中的车站。
+    /// lineID, 同个线路两个方向的车，ID 是不一样的
     ///
-    public func getAllBusInfo(ofLine lineID:String, referenceStation indexInBusLine:Int, completion: @escaping ( Result<[BusInfoAtStation]>) -> Void)
+    public func getAllBusesStatus(ofLine lineID:String, referenceStation indexInBusLine:Int, completion: @escaping ( Result<[BusStatusForStation]>) -> Void)
     {
         var path = "ssgj/bus.php"
         path += "?id=\(lineID)&no=\(indexInBusLine)"
@@ -82,25 +109,22 @@ struct BeijingBusAPI {
         path += "&encrypt=1"
         
         requestAPI(path:path) { (response) in
-            switch response.result {
-            case .success(let dict):
+            let parsed = response.result.map({ dict -> [BusStatusForStation] in
                 guard let root = (dict as? [String: Any])?["root"],
                     let data = (root as? [String: Any])?["data"],
                     let bus = (data as? [String:Any])?["bus"] as? [[String: Any]]
                     else {
-                        completion(.success([]))
-                        return
+                        return []
                 }
-                
-                let infos = bus.compactMap {
-                    try? BusInfoAtStation(JSONObject: $0)
+                return bus.compactMap {
+                    try? BusStatusForStation(JSONObject: $0)
                 }
-                completion(.success(infos))
-            case .failure(let e):
-                completion(.failure(e))
-            }
+            })
+            completion(parsed)
         }
     }
+    
+    
 }
 
 

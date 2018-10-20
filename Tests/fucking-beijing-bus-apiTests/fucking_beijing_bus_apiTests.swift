@@ -26,9 +26,18 @@ final class fucking_beijing_bus_apiTests: XCTestCase {
         
     }
     
+    func test_getAllLines() {
+        itWait { (done) in
+            BeijingBusAPI().getAllLines(completion: { (infos) in
+                print(infos)
+                done()
+            })
+        }
+    }
+    
     func test_getLineInfoForStation() {
         itWait { (done) in
-            BeijingBusAPI().getLineInfoForStation(
+            BeijingBusAPI().getLineStatusForStation(
                 [
                     (lineID: "160", stationName: "东内小街", indexInBusLine: 21),
                     (lineID: "404", stationName: "学知园", indexInBusLine: 24),  // 478
@@ -44,7 +53,7 @@ final class fucking_beijing_bus_apiTests: XCTestCase {
     func test_getAllBusInfo() {
         itWait { (done) in
             // 478 线路相对于"北京航空航天大学"
-            BeijingBusAPI().getAllBusInfo(ofLine: "404", referenceStation: 28, completion: { (infos) in
+            BeijingBusAPI().getAllBusesStatus(ofLine: "404", referenceStation: 28, completion: { (infos) in
                 print(infos)
                 done()
             })
