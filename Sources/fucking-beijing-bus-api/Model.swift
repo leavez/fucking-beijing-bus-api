@@ -56,6 +56,47 @@ public struct BusMeta {
 
 extension BusStatusForStation: Mappable {
     
+    /*
+     逆向自 Android 客户端
+     @SerializedName("lt")
+     private String delay;
+     private String extraInfo;
+     @SerializedName("gt")
+     private String gpsupdateTime;
+     @SerializedName("y")
+     private String lat;
+     @SerializedName("x")
+     private String lon;
+     @SerializedName("id")
+     private String mId;
+     @SerializedName("lid")
+     private String mLineId;
+     @SerializedName("sn")
+     private String mStationNum;
+     @SerializedName("ns")
+     private String nextStation;
+     @SerializedName("nsd")
+     private String nextStationDistince;
+     private int nextStationNo;
+     @SerializedName("nsn")
+     private String nextStationNoStr;
+     @SerializedName("nsrt")
+     private String nextStationRunTimes;
+     @SerializedName("nst")
+     private String nextStationTime;
+     @SerializedName("ut")
+     private String serverTime;
+     private int speedd;
+     @SerializedName("sd")
+     private String stationDistince;
+     @SerializedName("srt")
+     private String stationRunTimes;
+     @SerializedName("st")
+     private String stationTime;
+     @SerializedName("t")
+     private String type;
+     */
+    
     public init(map: Mapper) throws {
         busNumber = try? map.lid()
         ID = try map.id()

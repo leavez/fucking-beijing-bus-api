@@ -6,6 +6,7 @@ import Mappable
 struct BeijingBusAPI {
     
     func requestAPI(path: String,
+                    method: HTTPMethod = .get,
                     parameters: [String: Any]? = nil,
                     additionalHeaders: [String: String]? = nil,
                     completion: @escaping (DataResponse<Any>)->Void)
@@ -23,7 +24,7 @@ struct BeijingBusAPI {
         
         // request
         let request = Alamofire.request(url,
-                                        method: .post,
+                                        method: method,
                                         parameters: parameters,
                                         encoding: URLEncoding(),
                                         headers:additionalHeaders)
@@ -40,19 +41,23 @@ struct BeijingBusAPI {
     /// 该接口把所有公交路线都返回回来，大概 2000 多条（同一条线路的两个方向视为两条），接口数据大概 40+k
     public func getAllLines(completion: @escaping ((Result<[BusMeta]>) -> Void)) {
         
-        // https://github.com/wong2/beijing_bus/issues/8
+        // 加密的方式在 android 逆向的 headerSetHelper.class 有实现，但没有调通
+        // ABTOKEN 是 token，由 PLATFORM CID TIME 算出来。
+        // 试过 2018 年 2 月抓的一个包的 token，在 10 月仍然可用，故直接写死了。
         let headers = [
+            "PID": "5",
+            "PLATFORM": "ios",
+            "CID":"18d31a75a568b1e9fab8e410d398f981",
             "TIME": "1539706356",
             "ABTOKEN": "31d7dae1d869a172f3b66fa14fe274d1",
-            "CID":"18d31a75a568b1e9fab8e410d398f981",
-            "PLATFORM": "ios",
-            "PID": "5",
-            "VID": "\(arc4random_uniform(10)+1)",
+            
+            "VID": "6",
             "IMEI": "\(arc4random_uniform(10000)+1)",
-            "CTYPE": "json"
+            "CTYPE": "json",
         ]
         
-        requestAPI(path: "ssgj/v1.0.0/checkUpdate?version=1", additionalHeaders:headers) { (response) in
+        requestAPI(path: "ssgj/v1.0.0/checkUpdate?version=1",
+                   additionalHeaders:headers) { (response) in
             let parsed = response.result.map({ dict -> [BusMeta] in
                 guard let root = (dict as? [String: Any])?["lines"],
                     let data = (root as? [String:Any])?["line"] as? [[String: Any]]
@@ -80,7 +85,9 @@ struct BeijingBusAPI {
             String(format:"%@@@@%d@@@%@", $0.lineID, $0.indexInBusLine, $0.stationName)
         } .joined(separator: "|||")
         
-        requestAPI(path: "ssgj/bus2.php", parameters:  ["query": items]) { (response) in
+        requestAPI(path: "ssgj/bus2.php",
+                   method: .post,
+                   parameters:  ["query": items]) { (response) in
             let parsed = response.result.map({ dict -> [BusStatusForStation] in
                 guard let root = (dict as? [String: Any])?["root"],
                     let data = (root as? [String: Any])?["data"],
@@ -128,27 +135,3 @@ struct BeijingBusAPI {
 }
 
 
-/*
- def get_line_update_state():
- logging.info('Getting all lines')
- params = {'m': 'checkUpdate', 'version': '1'}
- return request_api(API_ENDPOINT, params)
- 
- 
- def get_bus_offline_data(line_id):
- logging.info('Fetching line: %s' % line_id)
- params = {'m': 'update', 'id': line_id}
- return request_api(API_ENDPOINT, params)
- 
- 
- def get_realtime_data(line_id, station_num):
- params = {
- 'city': '北京',
- 'id': line_id,
- 'no': station_num,
- 'type': 2,
- 'encrpt': 1,
- 'versionid': 2
- }
- return request_api(REALTIME_ENDPOINT, params)
- */

@@ -13,7 +13,7 @@ class Decryption {
     let rc4: RC4
     
     init(gt:String) {
-        let key = ("aibang" + gt).MD5
+        let key = ("aibang" + gt).md5
         rc4 = RC4(key: key)
     }
     
