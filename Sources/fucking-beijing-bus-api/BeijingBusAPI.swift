@@ -5,9 +5,11 @@ import Mappable
 
 public struct BeijingBusAPI {
     
-    // static data
+    /// static data
     public struct Static {
         
+        /// 获取所有线路
+        ///
         /// 该接口把所有公交路线都返回回来，大概 2000 多条（同一条线路的两个方向视为两条），接口数据大概 40+k
         /// 主要用来获取 lineID。一般不会变，建议缓存
         public static func getAllLines(completion: @escaping ((Result<[LineMeta]>) -> Void)) {
@@ -43,7 +45,10 @@ public struct BeijingBusAPI {
             }
         }
         
-        /// 获取线路的详细信息（如车站）
+        /// 获取线路的详细信息（如所包含的车站）
+        ///
+        /// - Parameters:
+        ///   - lineID: 所要查询的线路 ID，getAllLines 中返回的 ID。不是公交车上面写的线路号码。
         public static func getLineDetail(ofLine lineID:String, completion: @escaping ( Result<LineDetail?>) -> Void) {
             var path = "ssgj/v1.0.0/update"
             path += "?id=\(lineID)"
@@ -81,11 +86,16 @@ public struct BeijingBusAPI {
     /// real time data
     public struct RealTime {
         
-        /// 获取公交线路对于指定车站最近一辆车的状态（批量接口）
+        /// 批量获取公交线路对于指定车站最近一辆车的状态
         ///
-        /// 使用 lineID 表示公交线路，（stationName, indexInBusLine） 表示一个公交站，其中 indexInBusLine
-        /// 表示该站在线路中是第几个站（始发站为 1）。
+        /// 其中虽然（stationName, indexInBusLine）都可以表示一个具体车站，但两者都要求传入。
         ///
+        /// - Parameters:
+        ///   - stationWithLines: 需要获取的线路和对应的车站
+        ///      - lineID: 所要查询的线路 ID，getAllLines 中返回的 ID。不是公交车上面写的线路号码。
+        ///      - stationName: 车站的中文名
+        ///      - indexInBusLine: indexInBusLine
+
         public static func getLineStatusForStation(_ stationWithLines: [(lineID:String, stationName:String, indexInBusLine:Int)], completion: @escaping ( Result<[BusStatusForStation]>) -> Void)
         {
             let items = stationWithLines.map {
@@ -110,11 +120,13 @@ public struct BeijingBusAPI {
             }
         }
         
-        /// 获取公交线路的所有车的状态
+        /// 获取公交线路的所有车的状态（实时位置等）
         ///
         /// 返回结果为数组，数组中所有信息都是相对输入参数中的车站。
-        /// lineID, 同个线路两个方向的车，ID 是不一样的
         ///
+        /// - Parameters:
+        ///   - lineID: 所要查询的线路 ID。同个线路两个方向的车，ID 是不一样的
+        ///   - indexInBusLine: 参考车站在线路中的序数
         public static func getAllBusesStatus(ofLine lineID:String, referenceStation indexInBusLine:Int, completion: @escaping ( Result<[BusStatusForStation]>) -> Void)
         {
             var path = "ssgj/bus.php"
@@ -140,6 +152,12 @@ public struct BeijingBusAPI {
         
     }
     
+    
+    
+    
+    
+    // MARK:- Inner
+
     private static func requestAPI(path: String,
                                    method: HTTPMethod = .get,
                                    parameters: [String: Any]? = nil,
@@ -164,7 +182,6 @@ public struct BeijingBusAPI {
                                         encoding: URLEncoding(),
                                         headers:additionalHeaders)
         request.responseJSON { (dataResponse) in
-            print(dataResponse)
             completion(dataResponse)
         }
     }
