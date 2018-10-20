@@ -1,8 +1,21 @@
 # fucking-beijing-bus-api
 
+[![Swift](https://img.shields.io/badge/swift-4.2-orange.svg?style=flat)](#) [![Swift Package Manager](https://rawgit.com/jlyonsmith/artwork/master/SwiftPackageManager/swiftpackagemanager-compatible.svg)](https://swift.org/package-manager/)
+
 北京实时公交 API。可以获得车站公交的到站情况，以及公交车的实时定位。
 
 数据来源：[北京实时公交 App](http://jtw.beijing.gov.cn/ztlm/bjssgj/) 的接口，信息相对地图 app 更准确。
+
+## Installation
+
+require swift 4.2+
+
+Swift Package Manager 
+```
+.package(url: "https://github.com/leavez/fucking-beijing-bus-api.git", from: "1.0.0")
+```
+
+## Features
 
 ```Swift
 
@@ -62,8 +75,12 @@ public struct BeijingBusAPI {
 
 ```
 
+## Acknowledgment
+
 通过抓包/逆向和参考以下资料实现：
+
     - https://github.com/wong2/beijing_bus
     - https://blog.ddiu.site/bjbus-api-3/
     - https://github.com/wong2/beijing_bus/wiki/Decompile
 
+MIT
