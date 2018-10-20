@@ -1,8 +1,9 @@
 # fucking-beijing-bus-api
 
-[![Swift](https://img.shields.io/badge/swift-4.2-orange.svg?style=flat)](#) [![Swift Package Manager](https://rawgit.com/jlyonsmith/artwork/master/SwiftPackageManager/swiftpackagemanager-compatible.svg)](https://swift.org/package-manager/)
+[![Swift](https://img.shields.io/badge/swift-4.2-orange.svg?style=flat)](#) 
+[![Swift Package Manager](https://rawgit.com/jlyonsmith/artwork/master/SwiftPackageManager/swiftpackagemanager-compatible.svg)](https://swift.org/package-manager/)
 [![Build Status](https://travis-ci.org/leavez/fucking-beijing-bus-api.svg?branch=master)](https://travis-ci.org/leavez/fucking-beijing-bus-api)
-
+[![codecov](https://codecov.io/gh/leavez/fucking-beijing-bus-api/branch/master/graph/badge.svg)](https://codecov.io/gh/leavez/fucking-beijing-bus-api)
 
 北京实时公交 API。可以获得车站公交的到站情况，以及公交车的实时定位。
 
@@ -81,8 +82,8 @@ public struct BeijingBusAPI {
 
 通过抓包/逆向和参考以下资料实现：
 
-    - https://github.com/wong2/beijing_bus
-    - https://blog.ddiu.site/bjbus-api-3/
-    - https://github.com/wong2/beijing_bus/wiki/Decompile
+- https://github.com/wong2/beijing_bus
+- https://blog.ddiu.site/bjbus-api-3/
+- https://github.com/wong2/beijing_bus/wiki/Decompile
 
 MIT
