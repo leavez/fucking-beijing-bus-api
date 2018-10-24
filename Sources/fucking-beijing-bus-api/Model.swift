@@ -40,38 +40,38 @@ public struct BusStatusForStation {
 
 
 public struct LineMeta {
-    let ID: String
-    let busNumber: String // 大部分为数字。对于运通路线，前面包含"运通"二字
-    let departureStationName: String
-    let terminalStationName: String
+    public let ID: String
+    public let busNumber: String // 大部分为数字。对于运通路线，前面包含"运通"二字
+    public let departureStationName: String
+    public let terminalStationName: String
     
-    let classify: String // 线路分类，比较粗糙，没有什么实际意义
-    let status: String // unknow
-    let version: String // unknow
+    public let classify: String // 线路分类，比较粗糙，没有什么实际意义
+    public let status: String // unknow
+    public let version: String // unknow
 }
 
 
 public struct LineDetail {
     
     public struct Station {
-        let name: String
-        let index: Int
-        let location: Coordinate
+        public let name: String
+        public let index: Int
+        public let location: Coordinate
     }
     
-    let ID: String
-    let busNumber: String // 大部分为数字。对于运通路线，前面包含"运通"二字
-    let departureStationName: String
-    let terminalStationName: String
-    let operationTime: String
-    let stations: [Station]
+    public let ID: String
+    public let busNumber: String // 大部分为数字。对于运通路线，前面包含"运通"二字
+    public let departureStationName: String
+    public let terminalStationName: String
+    public let operationTime: String
+    public let stations: [Station]
     
-    let coords:String // 一些列坐标，这里面的坐标和 stations 里的坐标略有不同，不知道为什么
+    public let coords:String // 一些列坐标，这里面的坐标和 stations 里的坐标略有不同，不知道为什么
 }
 
 public struct Coordinate {
-    let longitude: Double
-    let latitude: Double
+    public let longitude: Double
+    public let latitude: Double
 }
 
 
