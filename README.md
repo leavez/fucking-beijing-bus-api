@@ -18,6 +18,11 @@ Swift Package Manager
 .package(url: "https://github.com/leavez/fucking-beijing-bus-api.git", from: "1.0.0")
 ```
 
+Cocoapods
+```
+pod "fucking-beijing-bus-api", :git => "https://github.com/leavez/fucking-beijing-bus-api.git", :tag => "1.0.1"
+```
+
 ## Features
 
 ```Swift
