@@ -35,13 +35,21 @@ extension BeijingBusAPI.Static {
         /// 如果有缓存数据，先读缓存，否则再去请求网络。
         /// 如果想清空请求数据，可以使用 cache 函数设 Key.lineDetails 为 nil
         public static func getLineDetailSmartly(ofLine lineID:String, completion: @escaping ( Result<LineDetail?>) -> Void) {
-            if let cached: LineDetail? = cachedObject(for: Key.lineDetails) {
-                completion(.success(cached))
+            
+            var cachedDict: [String:Data]
+                = cachedObject(for: Key.lineDetails) ?? [:]
+            
+            if let data = cachedDict[lineID],
+                let object = try? JSONDecoder().decode(LineDetail.self, from: data) {
+                completion(.success(object))
                 return
             }
             BeijingBusAPI.Static.getLineDetail(ofLine: lineID) { (result) in
                 result.withValue({ (data) in
-                    cache(data, for: Key.lineDetails)
+                    if let data = data, let encoded = try? JSONEncoder().encode(data) {
+                        cachedDict[lineID] = encoded
+                        cache(cachedDict, for: Key.lineDetails)
+                    }
                 })
                 completion(result)
             }

@@ -64,7 +64,7 @@ class CacheTest: XCTestCase {
     
     func test_getLineDetailSmartly() {
         // remove from cached
-        let key = BeijingBusAPI.Static.Cache.Key.allLines
+        let key = BeijingBusAPI.Static.Cache.Key.lineDetails
         BeijingBusAPI.Static.Cache.cache(nil as String?, for: key)
         
         // get from network
@@ -84,6 +84,13 @@ class CacheTest: XCTestCase {
         }
         // no wait
         XCTAssertEqual(result, result2)
+        
+        itWait { (done) in
+            BeijingBusAPI.Static.Cache.getLineDetailSmartly(ofLine: "403") { (r) in
+                XCTAssertNotEqual(r.value, result)
+                done()
+            }
+        }
     }
-
+    
 }
