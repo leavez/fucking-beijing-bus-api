@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'fucking-beijing-bus-api'
-    s.version          = '1.0.0'
+    s.version          = '1.0.2'
     s.summary          = 'beijing bus api'
   
     s.description      = <<-DESC
