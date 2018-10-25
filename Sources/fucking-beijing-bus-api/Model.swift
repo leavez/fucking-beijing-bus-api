@@ -13,19 +13,18 @@ import Mappable
 public struct BusStatusForStation {
     
     public let ID: String
-    public let busNumber: String? // 大部分为数字。对于运通路线，前面包含"运通"二字
+    public let lineID: String?
     public let timestamp: Double
     
     public let currentLocation: Coordinate
     public let gpsUpdatedTime: Double
     
-    public let currentStation: (
-        distanceRemain:Int,
-        estimatedRunDuration: TimeInterval,
-        estimatedArrivedTime: Double
-    )
+    public let distanceRemain:Int
+    public let estimatedRunDuration: TimeInterval
+    public let estimatedArrivedTime: Double
     
-    public let nextStation: (
+    
+    public let comingStation: (
         name:String,
         index:Int,
         distanceRemain:Int,                 // 距离下一站的距离
@@ -131,7 +130,7 @@ extension BusStatusForStation: Mappable {
      */
     
     public init(map: Mapper) throws {
-        busNumber = try? map.lid()
+        lineID = try? map.lid()
         ID = try map.id()
         timestamp = try map.ut()
         
@@ -145,14 +144,11 @@ extension BusStatusForStation: Mappable {
             latitude: Double(currentLocationString.latitude) ?? -1
         )
         gpsUpdatedTime = try map.gt()
+        distanceRemain = Int(de.decode(string: try map.sd())) ?? -1
+        estimatedRunDuration = Double(de.decode(string:try map.srt())) ?? -1
+        estimatedArrivedTime = Double(de.decode(string: try map.st())) ?? -1
         
-        currentStation = (
-            distanceRemain: Int(de.decode(string: try map.sd())) ?? -1,
-            estimatedRunDuration: Double(de.decode(string:try map.srt())) ?? -1,
-            estimatedArrivedTime: Double(de.decode(string: try map.st())) ?? -1
-        )
-        
-        nextStation = (
+        comingStation = (
             name: de.decode(string: try map.ns()),
             index: Int(de.decode(string: try map.nsn())) ?? -1,
             distanceRemain: try map.nsd(),

@@ -49,8 +49,8 @@ final class fucking_beijing_bus_apiTests: XCTestCase {
                             XCTAssert(info.ID.count > 0)
                             XCTAssert(info.gpsUpdatedTime != -1)
                             XCTAssert(info.currentLocation != Coordinate(longitude: -1, latitude: -1))
-                            XCTAssert(info.nextStation.name.count > 0)
-                            XCTAssert(info.currentStation.distanceRemain != -1)
+                            XCTAssert(info.comingStation.name.count > 0)
+                            XCTAssert(info.distanceRemain != -1)
                         } else {
                             print("现在是夜晚，没有车运行的，会返回空。否则有问题")
                         }
@@ -72,8 +72,8 @@ final class fucking_beijing_bus_apiTests: XCTestCase {
                         XCTAssert(info.ID.count > 0)
                         XCTAssert(info.gpsUpdatedTime != -1)
                         XCTAssert(info.currentLocation != Coordinate(longitude: -1, latitude: -1))
-                        XCTAssert(info.nextStation.name.count > 0)
-                        XCTAssert(info.currentStation.distanceRemain != -1)
+                        XCTAssert(info.comingStation.name.count > 0)
+                        XCTAssert(info.distanceRemain != -1)
                     } else {
                         print("现在是夜晚，没有车运行的，会返回空。否则有问题")
                     }
