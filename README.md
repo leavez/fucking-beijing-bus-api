@@ -20,7 +20,7 @@ Swift Package Manager
 
 Cocoapods
 ```
-pod "fucking-beijing-bus-api", :git => "https://github.com/leavez/fucking-beijing-bus-api.git", :tag => "1.0.3"
+pod "fucking-beijing-bus-api", :git => "https://github.com/leavez/fucking-beijing-bus-api.git", :tag => "1.0.4"
 ```
 
 ## Features
