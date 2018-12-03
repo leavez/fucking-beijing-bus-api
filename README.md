@@ -15,12 +15,12 @@ require swift 4.2+
 
 Swift Package Manager 
 ```
-.package(url: "https://github.com/leavez/fucking-beijing-bus-api.git", from: "1.0.0")
+.package(url: "https://github.com/leavez/fucking-beijing-bus-api.git", from: "1.0.5")
 ```
 
 Cocoapods
 ```
-pod "fucking-beijing-bus-api", :git => "https://github.com/leavez/fucking-beijing-bus-api.git", :tag => "1.0.1"
+pod "fucking-beijing-bus-api", :git => "https://github.com/leavez/fucking-beijing-bus-api.git", :tag => "1.0.5"
 ```
 
 ## Features
