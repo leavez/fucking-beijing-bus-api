@@ -181,6 +181,7 @@ public struct BeijingBusAPI {
                                    method: HTTPMethod = .get,
                                    parameters: [String: Any]? = nil,
                                    additionalHeaders: [String: String]? = nil,
+                                   completionInQueue: DispatchQueue = .global(),
                                    completion: @escaping (AFDataResponse<Any>)->Void)
     {
         // compose the url
@@ -200,7 +201,7 @@ public struct BeijingBusAPI {
                                  parameters: parameters,
                                  encoding: URLEncoding(),
                                  headers: additionalHeaders.map{HTTPHeaders($0)})
-        request.responseJSON { (dataResponse) in
+        request.responseJSON(queue: completionInQueue) { (dataResponse) in
             completion(dataResponse)
         }
     }

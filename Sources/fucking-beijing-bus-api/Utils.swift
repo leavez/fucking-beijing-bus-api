@@ -34,12 +34,10 @@ func toSync<A,B,C, ReturnType>(_ a:A, _ b:B, _ c:C, _ f: @escaping (A, B, C,  @e
 private func toSyncInner<ReturnType>(f: @escaping (@escaping (ReturnType)->Void)->Void) -> ReturnType {
     let s = DispatchSemaphore(value: 0)
     var result: ReturnType?
-    DispatchQueue.global().async {
-        f({ r in
-            result = r
-            s.signal()
-        })
-    }
+    f({ r in
+        result = r
+        s.signal()
+    })
     s.wait()
     return result!
 }
