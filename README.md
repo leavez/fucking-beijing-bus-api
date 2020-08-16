@@ -26,6 +26,8 @@ pod "fucking-beijing-bus-api", :git => "https://github.com/leavez/fucking-beijin
 
 ## Features
 
+NOTE: 所有的 block 从主线程返回，如果写 commandline 程序，注意避免死锁。
+
 ```Swift
 
 public struct BeijingBusAPI {
@@ -81,6 +83,7 @@ public struct BeijingBusAPI {
         public static func getAllBusesStatus(ofLine lineID: String, referenceStation indexInBusLine: Int, completion: @escaping (Result<[BusStatusForStation]>) -> Void)
     }
 }
+
 
 ```
 
