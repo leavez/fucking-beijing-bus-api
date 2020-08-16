@@ -1,6 +1,6 @@
 # fucking-beijing-bus-api
 
-[![Swift](https://img.shields.io/badge/swift-4.2-orange.svg?style=flat)](#) 
+[![Swift](https://img.shields.io/badge/swift-5-orange.svg?style=flat)](#) 
 [![Swift Package Manager](https://rawgit.com/jlyonsmith/artwork/master/SwiftPackageManager/swiftpackagemanager-compatible.svg)](https://swift.org/package-manager/)
 [![Build Status](https://travis-ci.org/leavez/fucking-beijing-bus-api.svg?branch=master)](https://travis-ci.org/leavez/fucking-beijing-bus-api)
 [![codecov](https://codecov.io/gh/leavez/fucking-beijing-bus-api/branch/master/graph/badge.svg)](https://codecov.io/gh/leavez/fucking-beijing-bus-api)
@@ -11,11 +11,11 @@
 
 ## Installation
 
-require swift 4.2+
+require swift 5+
 
 Swift Package Manager 
 ```
-.package(url: "https://github.com/leavez/fucking-beijing-bus-api.git", from: "1.0.5")
+.package(url: "https://github.com/leavez/fucking-beijing-bus-api.git", from: "1.1.0")
 ```
 
 Cocoapods
