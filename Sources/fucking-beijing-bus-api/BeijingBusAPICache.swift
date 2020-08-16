@@ -31,6 +31,11 @@ extension BeijingBusAPI.Static {
                 completion(result)
             }
         }
+        public static func getAllLinesSmartlySync() -> Result<[LineMeta], AFError> {
+            return toSync(Cache.getAllLinesSmartly(completion:))
+        }
+
+        
         
         /// 如果有缓存数据，先读缓存，否则再去请求网络。
         /// 如果想清空请求数据，可以使用 cache 函数设 Key.lineDetails 为 nil
@@ -53,6 +58,9 @@ extension BeijingBusAPI.Static {
                 }
                 completion(result)
             }
+        }
+        public static func getLineDetailSmartlySync(ofLine lineID:String) -> Result<LineDetail?, AFError> {
+            return toSync(lineID, Cache.getLineDetailSmartly(ofLine:completion:))
         }
 
         

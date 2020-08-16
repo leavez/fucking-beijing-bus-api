@@ -45,6 +45,13 @@ public struct BeijingBusAPI {
             }
         }
         
+        public static func getAllLinesSync() -> Result<[LineMeta], AFError> {
+            return toSync(Static.getAllLines(completion:))
+        }
+
+        
+
+        
         /// 获取线路的详细信息（如所包含的车站）
         ///
         /// - Parameters:
@@ -77,6 +84,10 @@ public struct BeijingBusAPI {
                 })
                 completion(parsed)
             }
+        }
+        
+        public static func getLineDetailSync(ofLine lineID:String) -> Result<LineDetail?, AFError> {
+            return toSync(lineID, Static.getLineDetail(ofLine:completion:))
         }
     }
     
@@ -120,6 +131,10 @@ public struct BeijingBusAPI {
             }
         }
         
+        public static func getLineStatusForStationSync(_ stationWithLines: [(lineID:String, stationName:String, indexInBusLine:Int)]) -> Result<[BusStatusForStation], AFError> {
+            return toSync(stationWithLines, RealTime.getLineStatusForStation(_:completion:))
+        }
+        
         /// 获取公交线路的所有车的状态（实时位置等）
         ///
         /// 返回结果为数组，数组中所有信息都是相对输入参数中的车站。
@@ -148,6 +163,10 @@ public struct BeijingBusAPI {
                 })
                 completion(parsed)
             }
+        }
+        
+        public static func getAllBusesStatusSync(ofLine lineID:String, referenceStation indexInBusLine:Int) -> Result<[BusStatusForStation], AFError> {
+            return toSync(lineID,indexInBusLine, RealTime.getAllBusesStatus(ofLine:referenceStation:completion:))
         }
         
     }
