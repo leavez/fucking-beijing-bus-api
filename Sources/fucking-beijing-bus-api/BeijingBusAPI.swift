@@ -45,8 +45,8 @@ public struct BeijingBusAPI {
             }
         }
         
-        public static func getAllLinesSync() -> Result<[LineMeta], AFError> {
-            return toSync(Static.getAllLines(completion:))
+        public static func getAllLinesSync() throws -> [LineMeta] { // AFError
+            return try unwrapResult(toSync(Static.getAllLines(completion:)))
         }
 
         
@@ -86,8 +86,8 @@ public struct BeijingBusAPI {
             }
         }
         
-        public static func getLineDetailSync(ofLine lineID:String) -> Result<LineDetail?, AFError> {
-            return toSync(lineID, Static.getLineDetail(ofLine:completion:))
+        public static func getLineDetailSync(ofLine lineID:String) throws -> LineDetail? { // AFError
+            return try unwrapResult(toSync(lineID, Static.getLineDetail(ofLine:completion:)))
         }
     }
     
@@ -131,8 +131,8 @@ public struct BeijingBusAPI {
             }
         }
         
-        public static func getLineStatusForStationSync(_ stationWithLines: [(lineID:String, stationName:String, indexInBusLine:Int)]) -> Result<[BusStatusForStation], AFError> {
-            return toSync(stationWithLines, RealTime.getLineStatusForStation(_:completion:))
+        public static func getLineStatusForStationSync(_ stationWithLines: [(lineID:String, stationName:String, indexInBusLine:Int)]) throws -> [BusStatusForStation] { // AFError
+            return try unwrapResult(toSync(stationWithLines, RealTime.getLineStatusForStation(_:completion:)))
         }
         
         /// 获取公交线路的所有车的状态（实时位置等）
@@ -165,8 +165,8 @@ public struct BeijingBusAPI {
             }
         }
         
-        public static func getAllBusesStatusSync(ofLine lineID:String, referenceStation indexInBusLine:Int) -> Result<[BusStatusForStation], AFError> {
-            return toSync(lineID,indexInBusLine, RealTime.getAllBusesStatus(ofLine:referenceStation:completion:))
+        public static func getAllBusesStatusSync(ofLine lineID:String, referenceStation indexInBusLine:Int) throws -> [BusStatusForStation] { // AFError
+            return try unwrapResult(toSync(lineID,indexInBusLine, RealTime.getAllBusesStatus(ofLine:referenceStation:completion:)))
         }
         
     }

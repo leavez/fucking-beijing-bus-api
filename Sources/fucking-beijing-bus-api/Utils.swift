@@ -43,3 +43,13 @@ private func toSyncInner<ReturnType>(f: @escaping (@escaping (ReturnType)->Void)
     s.wait()
     return result!
 }
+
+
+func unwrapResult<T, E>(_ r: Result<T, E>) throws -> T {
+    switch r {
+    case .success(let t):
+        return t
+    case .failure(let e):
+        throw e
+    }
+}

@@ -31,8 +31,8 @@ extension BeijingBusAPI.Static {
                 completion(result)
             }
         }
-        public static func getAllLinesSmartlySync() -> Result<[LineMeta], AFError> {
-            return toSync(Cache.getAllLinesSmartly(completion:))
+        public static func getAllLinesSmartlySync() throws -> [LineMeta] { // AFError
+            return try unwrapResult(toSync(Cache.getAllLinesSmartly(completion:)))
         }
 
         
@@ -59,8 +59,8 @@ extension BeijingBusAPI.Static {
                 completion(result)
             }
         }
-        public static func getLineDetailSmartlySync(ofLine lineID:String) -> Result<LineDetail?, AFError> {
-            return toSync(lineID, Cache.getLineDetailSmartly(ofLine:completion:))
+        public static func getLineDetailSmartlySync(ofLine lineID:String) throws -> LineDetail? { // AFError
+            return try unwrapResult(toSync(lineID, Cache.getLineDetailSmartly(ofLine:completion:)))
         }
 
         
