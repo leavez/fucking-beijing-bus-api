@@ -12,7 +12,7 @@ public struct BeijingBusAPI {
         ///
         /// 该接口把所有公交路线都返回回来，大概 2000 多条（同一条线路的两个方向视为两条），接口数据大概 40+k
         /// 主要用来获取 lineID。一般不会变，建议缓存
-        public static func getAllLines(completion: @escaping ((Result<[LineMeta]>) -> Void)) {
+        public static func getAllLines(completion: @escaping ((Result<[LineMeta], AFError>) -> Void)) {
             
             // 加密的方式在 android 逆向的 headerSetHelper.class 有实现，但没有调通
             // ABTOKEN 是 token，由 PLATFORM CID TIME 算出来。
@@ -49,7 +49,7 @@ public struct BeijingBusAPI {
         ///
         /// - Parameters:
         ///   - lineID: 所要查询的线路 ID，getAllLines 中返回的 ID。不是公交车上面写的线路号码。
-        public static func getLineDetail(ofLine lineID:String, completion: @escaping ( Result<LineDetail?>) -> Void) {
+        public static func getLineDetail(ofLine lineID:String, completion: @escaping ( Result<LineDetail?, AFError>) -> Void) {
             var path = "ssgj/v1.0.0/update"
             path += "?id=\(lineID)"
             
@@ -96,7 +96,7 @@ public struct BeijingBusAPI {
         ///      - stationName: 车站的中文名
         ///      - indexInBusLine: indexInBusLine
 
-        public static func getLineStatusForStation(_ stationWithLines: [(lineID:String, stationName:String, indexInBusLine:Int)], completion: @escaping ( Result<[BusStatusForStation]>) -> Void)
+        public static func getLineStatusForStation(_ stationWithLines: [(lineID:String, stationName:String, indexInBusLine:Int)], completion: @escaping ( Result<[BusStatusForStation], AFError>) -> Void)
         {
             let items = stationWithLines.map {
                 String(format:"%@@@@%d@@@%@", $0.lineID, $0.indexInBusLine, $0.stationName)
@@ -127,7 +127,7 @@ public struct BeijingBusAPI {
         /// - Parameters:
         ///   - lineID: 所要查询的线路 ID。同个线路两个方向的车，ID 是不一样的
         ///   - indexInBusLine: 参考车站在线路中的序数
-        public static func getAllBusesStatus(ofLine lineID:String, referenceStation indexInBusLine:Int, completion: @escaping ( Result<[BusStatusForStation]>) -> Void)
+        public static func getAllBusesStatus(ofLine lineID:String, referenceStation indexInBusLine:Int, completion: @escaping ( Result<[BusStatusForStation], AFError>) -> Void)
         {
             var path = "ssgj/bus.php"
             path += "?id=\(lineID)&no=\(indexInBusLine)"
@@ -162,7 +162,7 @@ public struct BeijingBusAPI {
                                    method: HTTPMethod = .get,
                                    parameters: [String: Any]? = nil,
                                    additionalHeaders: [String: String]? = nil,
-                                   completion: @escaping (DataResponse<Any>)->Void)
+                                   completion: @escaping (AFDataResponse<Any>)->Void)
     {
         // compose the url
         let baseURL = "http://transapp.btic.org.cn:8512/"
@@ -176,11 +176,11 @@ public struct BeijingBusAPI {
         }
         
         // request
-        let request = Alamofire.request(url,
-                                        method: method,
-                                        parameters: parameters,
-                                        encoding: URLEncoding(),
-                                        headers:additionalHeaders)
+        let request = AF.request(url,
+                                 method: method,
+                                 parameters: parameters,
+                                 encoding: URLEncoding(),
+                                 headers: additionalHeaders.map{HTTPHeaders($0)})
         request.responseJSON { (dataResponse) in
             completion(dataResponse)
         }

@@ -19,22 +19,22 @@ extension BeijingBusAPI.Static {
         
         /// 如果有缓存数据，先读缓存，否则再去请求网络。
         /// 如果想清空请求数据，可以使用 cache 函数设 Key.allLines 为 nil
-        public static func getAllLinesSmartly(completion: @escaping ((Result<[LineMeta]>) -> Void)) {
+        public static func getAllLinesSmartly(completion: @escaping ((Result<[LineMeta], AFError>) -> Void)) {
             if let cached: [LineMeta] = cachedObject(for: Key.allLines) {
                 completion(.success(cached))
                 return
             }
             BeijingBusAPI.Static.getAllLines { (result) in
-                result.withValue({ (data) in
+                if case let .success(data) = result {
                     cache(data, for: Key.allLines)
-                })
+                }
                 completion(result)
             }
         }
         
         /// 如果有缓存数据，先读缓存，否则再去请求网络。
         /// 如果想清空请求数据，可以使用 cache 函数设 Key.lineDetails 为 nil
-        public static func getLineDetailSmartly(ofLine lineID:String, completion: @escaping ( Result<LineDetail?>) -> Void) {
+        public static func getLineDetailSmartly(ofLine lineID:String, completion: @escaping ( Result<LineDetail?, AFError>) -> Void) {
             
             var cachedDict: [String:Data]
                 = cachedObject(for: Key.lineDetails) ?? [:]
@@ -45,12 +45,12 @@ extension BeijingBusAPI.Static {
                 return
             }
             BeijingBusAPI.Static.getLineDetail(ofLine: lineID) { (result) in
-                result.withValue({ (data) in
+                if case let .success(data) = result {
                     if let data = data, let encoded = try? JSONEncoder().encode(data) {
                         cachedDict[lineID] = encoded
                         cache(cachedDict, for: Key.lineDetails)
                     }
-                })
+                }
                 completion(result)
             }
         }

@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
         "state": {
           "branch": null,
-          "revision": "61a780f3b58ee0d2bb76fdb7b89dbc9751d521d7",
-          "version": "4.7.3"
+          "revision": "becd9a729a37bdbef5bc39dc3c702b99f9e3d046",
+          "version": "5.2.2"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/leavez/Mappable.git",
         "state": {
           "branch": null,
-          "revision": "38501737cf83fe993520d9f2271947f9c28f368f",
-          "version": "1.3.1"
+          "revision": "6db81dc7e70cf73bf9a122ed359f16d1b90606cb",
+          "version": "1.5.0"
         }
       }
     ]
